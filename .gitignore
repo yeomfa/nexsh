@@ -1,0 +1,15 @@
+# App
+node_modules/
+dist/
+.DS_Store
+.env
+*.log
+.parcel_cache/
+
+# Yarn
+.yarn/*
+!.yarn/cache
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions

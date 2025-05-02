@@ -1,0 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+* {
+  padding: 0;
+  margin: 0;
+}
+
+:root {
+  /* Colors */
+  --background-color: #1e1e1e;
+  --content-color: #333;
+  --border-color: #e3e3e3;
+  --text-color: #fff;
+  --gray-color: #454545;
+  --lightgray-color: #808080;
+  --darkgray-color: #656565;
+  --red-color: #ff1212;
+  --red-color-transparent: rgba(255, 99, 71, 0.05);
+  --green-color: #2cff21;
+
+  /* Font */
+  --font-family: 'Inter';
+  --font-regular: '400';
+  --font-medium: '600';
+  --font-bold: '800';
+
+  /* Border */
+  --border-radius: 5px;
+  --border-width: 1px;
+
+  /* Mis */
+  --animation-duration: 0.2s;
+}
+
+body {
+  font-family: var(--font-family), sans-serif;
+  font-optical-sizing: auto;
+  font-weight: var(--font-regular);
+  font-style: normal;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+#root {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

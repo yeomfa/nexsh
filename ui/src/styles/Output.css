@@ -1,0 +1,18 @@
+.output {
+  display: flex;
+  width: 100%;
+  padding: 0 14px;
+  align-items: center;
+  white-space: wrap;
+  border-left: 2px solid;
+  font-size: 14px;
+}
+
+.output.success {
+  border-left-color: var(--green-color);
+}
+
+.output.error {
+  border-left-color: var(--red-color);
+  background-color: var(--red-color-transparent);
+}

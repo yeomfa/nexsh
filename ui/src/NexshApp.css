@@ -1,0 +1,23 @@
+/* Windoe behavior */
+.window {
+  display: flex;
+  flex-direction: column;
+  padding: 5px 0;
+  background-color: var(--content-color);
+  border-radius: var(--border-radius);
+  border: var(--border-width) solid var(--border-color);
+  height: 50%;
+  width: 70vw;
+  transition: var(--animation-duration);
+}
+
+.maximized {
+  height: calc(100% - 10px);
+  width: 100%;
+  border-radius: 0;
+  border: 0;
+}
+
+.closed {
+  display: none;
+}

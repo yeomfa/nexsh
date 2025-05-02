@@ -1,0 +1,23 @@
+{
+  "name": "nexsh",
+  "version": "1.0.0",
+  "description": "Command line for execute different operations with json database",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "server": "yarn workspace server run dev",
+    "ui": "yarn workspace ui run dev",
+    "dev": "concurrently \" yarn server\" \"yarn ui\""
+  },
+  "author": "Omar Fandiño <yeomfa.me> (yeomfa@gmail.com)",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "ui",
+    "server"
+  ],
+  "packageManager": "yarn@4.9.1",
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

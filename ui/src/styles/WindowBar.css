@@ -1,0 +1,52 @@
+/* Window bar */
+.window-bar {
+  border-bottom: 1px solid var(--gray-color);
+}
+
+.window-bar .container {
+  padding: 2px 10px 5px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.window-bar .options {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.window-bar .option {
+  padding: 3px;
+  height: 16px;
+  width: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  cursor: pointer;
+  color: var(--darkgray-color);
+}
+
+.window-bar .option:hover {
+  background-color: var(--background-color);
+  color: var(--border-color);
+}
+
+.logo {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo .icon {
+  height: 20px;
+}
+
+.logo .version {
+  color: var(--darkgray-color);
+  font-size: 14px;
+  font-weight: 600;
+}

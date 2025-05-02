@@ -1,0 +1,36 @@
+.main {
+  flex: 1;
+  overflow: auto;
+}
+
+/* width */
+.main::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+.main::-webkit-scrollbar-track {
+  background: var(--background-color);
+  border-radius: 5px;
+}
+
+/* Handle */
+.main::-webkit-scrollbar-thumb {
+  background: var(--gray-color);
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+.main::-webkit-scrollbar-thumb:hover {
+  background: var(--darkgray-color);
+}
+
+.operation {
+  border-bottom: 1px solid var(--gray-color);
+  min-height: 60px;
+  display: flex;
+}
+
+.operation.last {
+  border: none;
+}

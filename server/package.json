@@ -1,0 +1,9 @@
+{
+  "name": "server",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node --watch server"
+  },
+  "packageManager": "yarn@4.9.1"
+}
