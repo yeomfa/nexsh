@@ -2,10 +2,10 @@ import { ChevronRightIcon } from '@heroicons/react/24/outline';
 import '../styles/Input.css';
 import { useEffect, useState } from 'react';
 
-export function Input({ text, isLastOperation, inputRef, executeCommand }) {
+export function Input({ id, text, isLastOperation, inputRef, executeCommand }) {
   const [value, setValue] = useState(text);
 
-  const updateValue = (e) => {
+  const updateInputValue = (e) => {
     const key = e.target.value;
 
     setValue(key);
@@ -16,7 +16,7 @@ export function Input({ text, isLastOperation, inputRef, executeCommand }) {
 
     if (key !== 'Enter') return;
 
-    if (value !== '') executeCommand(value);
+    if (value !== '') executeCommand(id, value);
   };
 
   useEffect(() => {
@@ -35,7 +35,7 @@ export function Input({ text, isLastOperation, inputRef, executeCommand }) {
         <input
           ref={inputRef}
           value={value}
-          onChange={updateValue}
+          onChange={updateInputValue}
           readOnly={!isLastOperation}
           onKeyDown={sendCommand}
         />

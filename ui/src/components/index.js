@@ -5,3 +5,5 @@ export * from './Logo';
 export * from './Content';
 export * from './Input';
 export * from './Output';
+export * from './OperationsList';
+export * from './Operation';

@@ -1,0 +1,9 @@
+.operation {
+  border-bottom: 1px solid var(--gray-color);
+  min-height: 60px;
+  display: flex;
+}
+
+.operation.last {
+  border: none;
+}
