@@ -2,6 +2,7 @@ import { useRef, useState, createRef, useEffect } from 'react';
 import generateUniqueId from '../utils/generateUniqueId';
 
 export const useTerminal = () => {
+  const lastOperationRef = useRef(null);
   const lastInputRef = useRef(null);
   const mainRef = useRef(null);
   const [cleanSpaceHeight, setCleanSpaceHeight] = useState('100%');
@@ -39,84 +40,103 @@ export const useTerminal = () => {
   };
 
   // Commands
-  const clearTerminal = (args) => {
-    const lastOperationRef = createRef(null);
+  const clearTerminal = () => {
+    addOperation('empty');
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => scrollToBottom());
+    });
+  };
+
+  // Add operation
+  const addOperation = (type = 'output', operation = {}) => {
+    if (type === 'empty')
+      return setOperations([
+        ...operations,
+        {
+          id: generateUniqueId(),
+          ref: createRef(null),
+          type: 'input',
+          text: '',
+        },
+      ]);
 
     setOperations([
       ...operations,
       {
         id: generateUniqueId(),
-        ref: lastOperationRef,
+        ref: createRef(null),
+        type,
+        ...operation,
+      },
+      {
+        id: generateUniqueId(),
+        ref: createRef(null),
         type: 'input',
         text: '',
       },
     ]);
-
-    requestAnimationFrame(() => {
-      const height = lastOperationRef.current.offsetHeight;
-      setCleanSpaceHeight(`calc(100% - ${height}px)`);
-
-      requestAnimationFrame(() => scrollToBottom());
-    });
   };
 
   // Execute command
   const handleInputCommand = (targetId, commandLine) => {
-    // Save commandLine
-    const newOperations = operations.map((operation) => {
-      if (operation.id !== targetId) return operation;
+    // Update text to target
+    operations.forEach((operation) => {
+      if (operation.id !== targetId) return;
 
       operation.text = commandLine;
-
-      return operation;
     });
 
     const [command, ...args] = commandLine
       .split(' ')
       .map((text) => text.trim());
 
+    // Validate command
+    /*     if (!['clear', 'neofetch'].includes(command))
+      return addOperation(); */
+
+    let resultOperation = {};
+
     switch (command) {
       case 'clear':
         clearTerminal();
+        return;
+
+      case 'neofetch':
+        resultOperation = {
+          status: 'success',
+          text: 'Yeah, the command exists!',
+        };
         break;
 
       default:
-        setOperations([
-          ...newOperations,
-          {
-            id: generateUniqueId(),
-            ref: createRef(null),
-            type: 'output',
-            status: 'error',
-            text: `${command}: Command not found!`,
-          },
-          {
-            id: generateUniqueId(),
-            ref: createRef(null),
-            type: 'input',
-            text: '',
-          },
-        ]);
+        resultOperation = {
+          status: 'error',
+          text: `${command}: Command not found!`,
+        };
         break;
     }
+
+    addOperation('output', resultOperation);
   };
 
   // Init term
   useEffect(() => {
     updateCleanSpaceHeight();
-    scrollToBottom();
     focusInput();
+    // scrollToBottom();
+    console.log(operations);
   }, [operations]);
 
-  return [
+  return {
     operations,
     mainRef,
     lastInputRef,
     focusInput,
-    scrollToBottom,
+    // scrollToBottom,
     clearTerminal,
     handleInputCommand,
     cleanSpaceHeight,
     updateCleanSpaceHeight,
-  ];
+  };
 };

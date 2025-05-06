@@ -1,29 +1,28 @@
-import { useEffect, useRef, useState } from 'react';
 import '../styles/Content.css';
 import { OperationsList } from './';
 import { useTerminal } from '../hooks';
 
 export function Content() {
-  const [
+  const {
     operations,
     mainRef,
     lastInputRef,
     focusInput,
-    scrollToBottom,
-    _,
-    executeCommand,
+    handleInputCommand,
     cleanSpaceHeight,
-    updateCleanSpaceHeight,
-  ] = useTerminal();
+  } = useTerminal();
 
   return (
     <main ref={mainRef} className="main" onClick={focusInput}>
       <OperationsList
         operations={operations}
         lastInputRef={lastInputRef}
-        executeCommand={executeCommand}
+        executeCommand={handleInputCommand}
       />
-      <div className="clean-space" style={{ height: cleanSpaceHeight }}></div>
+      <div
+        className="clean-space"
+        style={{ height: cleanSpaceHeight, backgroundColor: 'red' }}
+      ></div>
     </main>
   );
 }
