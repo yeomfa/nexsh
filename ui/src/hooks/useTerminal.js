@@ -90,8 +90,6 @@ export const useTerminal = (handlers = {}) => {
       .split(' ')
       .map((text) => text.trim());
 
-    let resultOperation = {};
-
     // Validate command
     if (!allCommands.includes(command)) {
       return addOperation({
@@ -118,9 +116,14 @@ export const useTerminal = (handlers = {}) => {
       });
 
     // Handle commands
-    resultOperation = await handlers[command](args);
-
-    addOperation(resultOperation);
+    try {
+      const cmd = handlers[command];
+      const resultOperation = await cmd.handler(args);
+      addOperation(resultOperation);
+    } catch (e) {
+      addOperation({ text: `Execution failed: ${e.message}`, status: 'error' });
+      throw new Error(e.message);
+    }
   };
 
   // Init term
