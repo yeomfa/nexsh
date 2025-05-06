@@ -1,8 +1,11 @@
 import { useRef, useState, createRef, useEffect } from 'react';
 import generateUniqueId from '../utils/generateUniqueId';
 
-export const useTerminal = () => {
-  const lastOperationRef = useRef(null);
+export const useTerminal = (handlers = {}) => {
+  const commands = Object.keys(handlers);
+  const defaultCommands = ['clear', 'help', 'history'];
+  const allCommands = [...defaultCommands, ...commands];
+
   const lastInputRef = useRef(null);
   const mainRef = useRef(null);
   const [cleanSpaceHeight, setCleanSpaceHeight] = useState('100%');
@@ -41,7 +44,7 @@ export const useTerminal = () => {
 
   // Commands
   const clearTerminal = () => {
-    addOperation('empty');
+    addOperation();
 
     requestAnimationFrame(() => {
       requestAnimationFrame(() => scrollToBottom());
@@ -49,37 +52,33 @@ export const useTerminal = () => {
   };
 
   // Add operation
-  const addOperation = (type = 'output', operation = {}) => {
-    if (type === 'empty')
-      return setOperations([
-        ...operations,
-        {
-          id: generateUniqueId(),
-          ref: createRef(null),
-          type: 'input',
-          text: '',
-        },
-      ]);
+  const addOperation = (operation = undefined) => {
+    // Default type: 'Output'
+    const type = operation?.type === 'input' ? 'input' : 'output';
+    const newOperations = [];
 
-    setOperations([
-      ...operations,
-      {
+    // New operation
+    if (operation)
+      newOperations.push({
         id: generateUniqueId(),
         ref: createRef(null),
-        type,
         ...operation,
-      },
-      {
-        id: generateUniqueId(),
-        ref: createRef(null),
-        type: 'input',
-        text: '',
-      },
-    ]);
+        type,
+      });
+
+    // New input operation
+    newOperations.push({
+      id: generateUniqueId(),
+      ref: createRef(null),
+      type: 'input',
+      text: '',
+    });
+
+    setOperations([...operations, ...newOperations]);
   };
 
   // Execute command
-  const handleInputCommand = (targetId, commandLine) => {
+  const handleInputCommand = async (targetId, commandLine) => {
     // Update text to target
     operations.forEach((operation) => {
       if (operation.id !== targetId) return;
@@ -91,41 +90,43 @@ export const useTerminal = () => {
       .split(' ')
       .map((text) => text.trim());
 
-    // Validate command
-    /*     if (!['clear', 'neofetch'].includes(command))
-      return addOperation(); */
-
     let resultOperation = {};
 
-    switch (command) {
-      case 'clear':
-        clearTerminal();
-        return;
-
-      case 'neofetch':
-        resultOperation = {
-          status: 'success',
-          text: 'Yeah, the command exists!',
-        };
-        break;
-
-      default:
-        resultOperation = {
-          status: 'error',
-          text: `${command}: Command not found!`,
-        };
-        break;
+    // Validate command
+    if (!allCommands.includes(command)) {
+      return addOperation({
+        type: 'output',
+        status: 'error',
+        text: `${command}: Command not found!`,
+      });
     }
 
-    addOperation('output', resultOperation);
+    // Clear terminal
+    if (command === 'clear') return clearTerminal();
+    if (command === 'help')
+      return addOperation({
+        type: 'output',
+        text: `Available commands: ${allCommands.join(', ')}`,
+      });
+    if (command === 'history')
+      return addOperation({
+        type: 'output',
+        text: operations
+          .filter((operation) => operation.type === 'input')
+          .map((operation) => operation.text)
+          .join(', '),
+      });
+
+    // Handle commands
+    resultOperation = await handlers[command](args);
+
+    addOperation(resultOperation);
   };
 
   // Init term
   useEffect(() => {
     updateCleanSpaceHeight();
     focusInput();
-    // scrollToBottom();
-    console.log(operations);
   }, [operations]);
 
   return {
