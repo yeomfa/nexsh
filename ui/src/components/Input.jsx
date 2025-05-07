@@ -1,8 +1,10 @@
 import { ChevronRightIcon } from '@heroicons/react/24/outline';
 import '../styles/Input.css';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import SessionContext from '../context/SessionContext';
 
 export function Input({ id, text, isLastOperation, inputRef, executeCommand }) {
+  const { userName, scopeName, envName } = useContext(SessionContext);
   const [value, setValue] = useState(text);
 
   const updateInputValue = (e) => {
@@ -25,7 +27,12 @@ export function Input({ id, text, isLastOperation, inputRef, executeCommand }) {
 
   return (
     <div className="input">
-      <span className="username">yeomfa</span>
+      <span className="username">
+        {userName}@{envName}{' '}
+        <span className="session-name">
+          {scopeName ? `(${scopeName})` : ''}
+        </span>
+      </span>
 
       <div className="input-field">
         <span className="arrow">

@@ -13,6 +13,12 @@
   padding-left: 4px;
 }
 
+.input .session-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--lightgray-color);
+}
+
 .input-field {
   display: flex;
 }

@@ -1,9 +1,12 @@
-import { useRef, useState, createRef, useEffect } from 'react';
-import generateUniqueId from '../utils/generateUniqueId';
+import { useRef, useState, createRef, useEffect, useContext } from 'react';
+import generateUniqueId from '../helpers/generateUniqueId';
+import SessionContext from '../context/SessionContext';
 
 export const useTerminal = (handlers = {}) => {
+  const { updateUserName, updateEnvName, updateScopeName } =
+    useContext(SessionContext);
   const commands = Object.keys(handlers);
-  const defaultCommands = ['clear', 'help', 'history'];
+  const defaultCommands = ['clear', 'help', 'history', 'set'];
   const allCommands = [...defaultCommands, ...commands];
 
   const lastInputRef = useRef(null);
@@ -86,6 +89,7 @@ export const useTerminal = (handlers = {}) => {
       operation.text = commandLine;
     });
 
+    // Parse command line
     const [command, ...args] = commandLine
       .split(' ')
       .map((text) => text.trim());
@@ -114,6 +118,25 @@ export const useTerminal = (handlers = {}) => {
           .map((operation) => operation.text)
           .join(', '),
       });
+    if (command === 'set') {
+      const names = ['username', 'envname'];
+      const [nameToChange, newName] = args;
+
+      if (!names.includes(nameToChange.toLowerCase()) || !newName)
+        return addOperation({
+          type: 'output',
+          status: 'error',
+          text: `Syntax error, try: set <userName, envName> <newNameValue>`,
+        });
+
+      if (nameToChange.toLowerCase() === 'username') updateUserName(newName);
+      if (nameToChange.toLowerCase() === 'envname') updateEnvName(newName);
+
+      return addOperation({
+        status: 'success',
+        text: `${nameToChange} updated!`,
+      });
+    }
 
     // Handle commands
     try {
