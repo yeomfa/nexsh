@@ -3,23 +3,81 @@ import generateUniqueId from '../helpers/generateUniqueId';
 import SessionContext from '../context/SessionContext';
 
 export const useTerminal = (handlers = {}) => {
-  const { updateUserName, updateEnvName, updateScopeName } =
+  const { updateUserName, updateEnvName, operations, updateOperations } =
     useContext(SessionContext);
-  const commands = Object.keys(handlers);
-  const defaultCommands = ['clear', 'help', 'history', 'set'];
-  const allCommands = [...defaultCommands, ...commands];
+
+  const defaultHandlers = {
+    clear: {
+      description: 'Clear terminal',
+      handler() {
+        addOperation();
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => scrollToBottom());
+        });
+      },
+    },
+    help: {
+      description: 'Show all commands with description',
+      handler() {
+        const allCommandsMarkup = Object.entries(allHandlers)
+          .map(
+            ([key, command]) =>
+              `
+                <div class>
+                  <span class="text semibold">${key}</span>
+                  <span class="handler-description text lightgray">${command.description}</span><br>
+                </div>
+              `,
+          )
+          .join('');
+
+        return {
+          status: 'success',
+          type: 'output',
+          text: `~ Available commands ~ <br><br> ${allCommandsMarkup}`,
+        };
+      },
+    },
+    history: {
+      description: 'List history',
+      handler() {
+        return {
+          text: operations
+            .filter((operation) => operation.type === 'input')
+            .map((operation) => operation.text)
+            .join(',<br>'),
+        };
+      },
+    },
+    set: {
+      description: 'Allow yout to change environment variable names',
+      handler(args) {
+        const names = ['username', 'envname'];
+        const [nameToChange, newName] = args;
+
+        if (!names.includes(nameToChange.toLowerCase()) || !newName)
+          return addOperation({
+            status: 'error',
+            text: `Syntax error, try: set < userName, envName> <newNameValue>`,
+          });
+
+        if (nameToChange.toLowerCase() === 'username') updateUserName(newName);
+        if (nameToChange.toLowerCase() === 'envname') updateEnvName(newName);
+
+        return {
+          status: 'success',
+          text: `${nameToChange} updated!`,
+        };
+      },
+    },
+  };
+  const allHandlers = { ...defaultHandlers, ...handlers };
+  const allCommands = [...Object.keys(allHandlers)];
 
   const lastInputRef = useRef(null);
   const mainRef = useRef(null);
   const [cleanSpaceHeight, setCleanSpaceHeight] = useState('100%');
-  const [operations, setOperations] = useState([
-    {
-      id: generateUniqueId(),
-      ref: createRef(null),
-      type: 'input',
-      text: '',
-    },
-  ]);
 
   // Update clean space height
   const updateCleanSpaceHeight = () => {
@@ -45,15 +103,6 @@ export const useTerminal = (handlers = {}) => {
     mainEl.scrollTop = mainRef.current.scrollHeight;
   };
 
-  // Commands
-  const clearTerminal = () => {
-    addOperation();
-
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => scrollToBottom());
-    });
-  };
-
   // Add operation
   const addOperation = (operation = undefined) => {
     // Default type: 'Output'
@@ -77,7 +126,7 @@ export const useTerminal = (handlers = {}) => {
       text: '',
     });
 
-    setOperations([...operations, ...newOperations]);
+    updateOperations([...operations, ...newOperations]);
   };
 
   // Execute command
@@ -103,45 +152,11 @@ export const useTerminal = (handlers = {}) => {
       });
     }
 
-    // Clear terminal
-    if (command === 'clear') return clearTerminal();
-    if (command === 'help')
-      return addOperation({
-        type: 'output',
-        text: `Available commands: ${allCommands.join(', ')}`,
-      });
-    if (command === 'history')
-      return addOperation({
-        type: 'output',
-        text: operations
-          .filter((operation) => operation.type === 'input')
-          .map((operation) => operation.text)
-          .join(', '),
-      });
-    if (command === 'set') {
-      const names = ['username', 'envname'];
-      const [nameToChange, newName] = args;
-
-      if (!names.includes(nameToChange.toLowerCase()) || !newName)
-        return addOperation({
-          type: 'output',
-          status: 'error',
-          text: `Syntax error, try: set <userName, envName> <newNameValue>`,
-        });
-
-      if (nameToChange.toLowerCase() === 'username') updateUserName(newName);
-      if (nameToChange.toLowerCase() === 'envname') updateEnvName(newName);
-
-      return addOperation({
-        status: 'success',
-        text: `${nameToChange} updated!`,
-      });
-    }
-
     // Handle commands
     try {
-      const cmd = handlers[command];
+      const cmd = allHandlers[command];
       const resultOperation = await cmd.handler(args);
+
       addOperation(resultOperation);
     } catch (e) {
       addOperation({ text: `Execution failed: ${e.message}`, status: 'error' });
@@ -160,8 +175,6 @@ export const useTerminal = (handlers = {}) => {
     mainRef,
     lastInputRef,
     focusInput,
-    // scrollToBottom,
-    clearTerminal,
     handleInputCommand,
     cleanSpaceHeight,
     updateCleanSpaceHeight,

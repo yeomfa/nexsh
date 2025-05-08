@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import NexshApp from './NexshApp';
 
 import './main.css';
+import './styles/defaultHandlers.css';
 import SessionProvider from './context/SessionProvider';
 
 // Get root
@@ -14,5 +15,5 @@ root.render(
     <SessionProvider>
       <NexshApp />
     </SessionProvider>
-  </StrictMode>
+  </StrictMode>,
 );

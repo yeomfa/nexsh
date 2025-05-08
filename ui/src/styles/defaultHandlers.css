@@ -1,0 +1,11 @@
+.semibold {
+  font-weight: 600;
+}
+
+.lightgray {
+  color: var(--lightgray-color);
+}
+
+.handler-description {
+  margin-left: 5px;
+}

@@ -6,7 +6,6 @@ import handlers from '../handlers';
 
 export function Content() {
   const {
-    operations,
     mainRef,
     lastInputRef,
     focusInput,
@@ -17,7 +16,6 @@ export function Content() {
   return (
     <main ref={mainRef} className="main" onClick={focusInput}>
       <OperationsList
-        operations={operations}
         lastInputRef={lastInputRef}
         executeCommand={handleInputCommand}
       />
