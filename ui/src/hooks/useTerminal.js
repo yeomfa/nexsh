@@ -46,7 +46,7 @@ export const useTerminal = (handlers = {}) => {
           text: operations
             .filter((operation) => operation.type === 'input')
             .map((operation) => operation.text)
-            .join(',<br>'),
+            .join('<br>'),
         };
       },
     },

@@ -9,6 +9,7 @@
   height: 50%;
   width: 70vw;
   transition: var(--animation-duration);
+  backdrop-filter: var(--blur);
 }
 
 .maximized {

@@ -8,10 +8,11 @@
 :root {
   /* Colors */
   --background-color: #1e1e1e;
-  --content-color: #333;
-  --border-color: #e3e3e3;
+  /* --content-color: #333; */
+  --content-color: rgb(51 51 51 / var(--opacity));
+  --border-color: #838383;
   --text-color: #fff;
-  --gray-color: #454545;
+  --gray-color: rgb(69 69 69 / var(--opacity));
   --lightgray-color: #808080;
   --darkgray-color: #656565;
   --red-color: #ff1212;
@@ -30,6 +31,9 @@
 
   /* Mis */
   --animation-duration: 0.2s;
+  --wallpaper: url('/wallpapers/chill_on.jpg');
+  --blur: blur(10px);
+  --opacity: 80%;
 }
 
 body {
@@ -37,11 +41,13 @@ body {
   font-optical-sizing: auto;
   font-weight: var(--font-regular);
   font-style: normal;
-  background-color: var(--background-color);
   color: var(--text-color);
 }
 
 #root {
+  background-color: var(--background-color);
+  background-image: var(--wallpaper);
+  background-size: cover;
   height: 100vh;
   width: 100vw;
   display: flex;
