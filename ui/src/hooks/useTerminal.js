@@ -26,9 +26,11 @@ export const useTerminal = (handlers = {}) => {
               `
                 <div class>
                   <span class="text semibold">${key}</span>
-                  <span class="handler-description text lightgray">${command.description}</span><br>
+                  <span class="handler-description text lightgray">${
+                    command.description ?? ''
+                  }</span><br>
                 </div>
-              `,
+              `
           )
           .join('');
 
