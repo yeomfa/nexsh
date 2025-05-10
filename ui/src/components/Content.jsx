@@ -1,25 +1,18 @@
 import '../styles/Content.css';
 import { OperationsList } from './';
-import { useTerminal } from '../hooks';
-import { useState } from 'react';
-import handlers from '../handlers';
 
-export function Content() {
-  const {
-    mainRef,
-    lastInputRef,
-    focusInput,
-    handleInputCommand,
-    cleanSpaceHeight,
-  } = useTerminal(handlers);
-
+export function Content({ terminal }) {
   return (
-    <main ref={mainRef} className="main" onClick={focusInput}>
+    <main ref={terminal.mainRef} className="main" onClick={terminal.focusInput}>
       <OperationsList
-        lastInputRef={lastInputRef}
-        executeCommand={handleInputCommand}
+        lastInputRef={terminal.lastInputRef}
+        executeCommand={terminal.handleInputCommand}
+        isLoading={terminal.isLoading}
       />
-      <div className="clean-space" style={{ height: cleanSpaceHeight }}></div>
+      <div
+        className="clean-space"
+        style={{ height: terminal.cleanSpaceHeight }}
+      ></div>
     </main>
   );
 }

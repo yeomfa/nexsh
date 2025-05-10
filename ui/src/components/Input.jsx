@@ -3,7 +3,14 @@ import '../styles/Input.css';
 import { useContext, useEffect, useState } from 'react';
 import SessionContext from '../context/SessionContext';
 
-export function Input({ id, text, isLastOperation, inputRef, executeCommand }) {
+export function Input({
+  id,
+  text,
+  isLastOperation,
+  inputRef,
+  executeCommand,
+  isLoading,
+}) {
   const { userName, scopeName, envName } = useContext(SessionContext);
   const [value, setValue] = useState(text);
 
@@ -43,7 +50,7 @@ export function Input({ id, text, isLastOperation, inputRef, executeCommand }) {
           ref={inputRef}
           value={value}
           onChange={updateInputValue}
-          readOnly={!isLastOperation}
+          readOnly={!isLastOperation || isLoading}
           onKeyDown={sendCommand}
         />
       </div>

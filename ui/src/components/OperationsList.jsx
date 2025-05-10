@@ -1,11 +1,10 @@
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { Operation } from './Operation';
 import SessionContext from '../context/SessionContext';
 
-export function OperationsList({ lastInputRef, executeCommand }) {
+export function OperationsList({ lastInputRef, executeCommand, isLoading }) {
   const { operations } = useContext(SessionContext);
 
-  useEffect(() => { });
   return (
     <ul>
       {operations.map((operation, index) => {
@@ -18,6 +17,7 @@ export function OperationsList({ lastInputRef, executeCommand }) {
             lastInputRef={lastInputRef}
             executeCommand={executeCommand}
             operation={operation}
+            isLoading={isLoading}
           />
         );
       })}

@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import './NexshApp.css';
 import { Content, WindowBar } from './components';
+import { useTerminal } from './hooks';
+import handlers from './handlers';
 
 function NexshApp() {
   const [windowStatus, setWindowStatus] = useState('normal');
+  const terminal = useTerminal(handlers);
 
   const toggleDimensions = () => {
     setWindowStatus(windowStatus == 'normal' ? 'maximized' : 'normal');
@@ -19,9 +22,10 @@ function NexshApp() {
       <WindowBar
         toggleDimensions={toggleDimensions}
         closeWindow={closeWindow}
+        isLoading={terminal.isLoading}
       />
       {/* Content */}
-      <Content />
+      <Content terminal={terminal} />
     </div>
   );
 }

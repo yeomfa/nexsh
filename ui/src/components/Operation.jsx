@@ -6,6 +6,7 @@ export function Operation({
   lastInputRef,
   executeCommand,
   operation,
+  isLoading,
 }) {
   return (
     <li
@@ -18,6 +19,7 @@ export function Operation({
           isLastOperation={isLastOperation}
           inputRef={isLastOperation ? lastInputRef : null}
           executeCommand={executeCommand}
+          isLoading={isLoading}
         />
       ) : (
         <Output {...operation} />

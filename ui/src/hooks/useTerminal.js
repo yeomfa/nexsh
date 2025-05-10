@@ -26,8 +26,9 @@ export const useTerminal = (handlers = {}) => {
               `
                 <div class>
                   <span class="text semibold">${key}</span>
-                  <span class="handler-description text lightgray">${command.description ?? ''
-              }</span><br>
+                  <span class="handler-description text lightgray">${
+                    command.description ?? ''
+                  }</span><br>
                 </div>
               `,
           )
@@ -56,7 +57,6 @@ export const useTerminal = (handlers = {}) => {
       handler(args) {
         const names = ['username', 'envname'];
         const [nameToChange, newName] = args;
-        console.log();
 
         if (
           !nameToChange ||
@@ -84,6 +84,7 @@ export const useTerminal = (handlers = {}) => {
   const lastInputRef = useRef(null);
   const mainRef = useRef(null);
   const [cleanSpaceHeight, setCleanSpaceHeight] = useState('100%');
+  const [isLoading, setIsLoading] = useState(false);
 
   // Update clean space height
   const updateCleanSpaceHeight = () => {
@@ -137,6 +138,7 @@ export const useTerminal = (handlers = {}) => {
 
   // Execute command
   const handleInputCommand = async (targetId, commandLine) => {
+    setIsLoading(true);
     // Update text to target
     operations.forEach((operation) => {
       if (operation.id !== targetId) return;
@@ -167,6 +169,8 @@ export const useTerminal = (handlers = {}) => {
     } catch (e) {
       addOperation({ text: `Execution failed: ${e.message}`, status: 'error' });
       throw new Error(e.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -184,5 +188,6 @@ export const useTerminal = (handlers = {}) => {
     handleInputCommand,
     cleanSpaceHeight,
     updateCleanSpaceHeight,
+    isLoading,
   };
 };
