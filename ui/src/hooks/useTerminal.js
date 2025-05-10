@@ -26,11 +26,10 @@ export const useTerminal = (handlers = {}) => {
               `
                 <div class>
                   <span class="text semibold">${key}</span>
-                  <span class="handler-description text lightgray">${
-                    command.description ?? ''
-                  }</span><br>
+                  <span class="handler-description text lightgray">${command.description ?? ''
+              }</span><br>
                 </div>
-              `
+              `,
           )
           .join('');
 
@@ -57,12 +56,17 @@ export const useTerminal = (handlers = {}) => {
       handler(args) {
         const names = ['username', 'envname'];
         const [nameToChange, newName] = args;
+        console.log();
 
-        if (!names.includes(nameToChange.toLowerCase()) || !newName)
-          return addOperation({
+        if (
+          !nameToChange ||
+          !names.includes(nameToChange.toLowerCase()) ||
+          !newName
+        )
+          return {
             status: 'error',
-            text: `Syntax error, try: set < userName, envName> <newNameValue>`,
-          });
+            text: `Invalid param, try: set [userName, envName] newNameValue`,
+          };
 
         if (nameToChange.toLowerCase() === 'username') updateUserName(newName);
         if (nameToChange.toLowerCase() === 'envname') updateEnvName(newName);

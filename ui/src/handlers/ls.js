@@ -1,3 +1,5 @@
+import waiter from '../helpers/waiter';
+
 export const ls = {
   description: 'List databases and collections',
   async handler(args) {
@@ -28,25 +30,36 @@ export const ls = {
 
     // List dbs
     if (param === 'dbs') {
-      return await fetch('/api/v1/databases')
-        .then((res) => {
-          return res.json();
-        })
-        .then((data) => {
-          const dbs = data.data.databases;
-          const dbsOutput = dbs.map((db) => db.name).join('<br>');
+      const { data } = await waiter.get('/api/v1/databases');
+      const dbs = data.databases;
+      const dbsOutput = dbs.map((db) => db.name).join('<br>');
 
-          return {
-            text: dbsOutput,
-            status: 'success',
-          };
-        })
-        .catch((err) => {
-          return {
-            text: `Error: ${err.message}`,
-            status: 'error',
-          };
-        });
+      return {
+        text: dbsOutput,
+        status: 'success',
+      };
+    }
+
+    // List collections
+    if (param === 'collections') {
+      const currDatabase = {};
+
+      if (!currDatabase.id)
+        return {
+          text: 'You should select a database with `use database_name` command',
+          status: 'error',
+        };
+
+      // const { data } = await waiter.get('/api/v1/databases/:id/collections');
+      const collections = data.collections;
+      const collectionsOutput = collections
+        .map((collection) => collection.name)
+        .join('<br>');
+
+      return {
+        text: collectionsOutput,
+        status: 'success',
+      };
     }
 
     // List collections
