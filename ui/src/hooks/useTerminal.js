@@ -153,6 +153,7 @@ export const useTerminal = (handlers = {}) => {
 
     // Validate command
     if (!allCommands.includes(command)) {
+      setIsLoading(false);
       return addOperation({
         type: 'output',
         status: 'error',
