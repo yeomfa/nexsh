@@ -9,9 +9,11 @@ export function Input({
   isLastOperation,
   inputRef,
   executeCommand,
+  userName,
+  pathName,
+  envName,
   isLoading,
 }) {
-  const { userName, scopeName, envName } = useContext(SessionContext);
   const [value, setValue] = useState(text);
 
   const updateInputValue = (e) => {
@@ -36,9 +38,7 @@ export function Input({
     <div className="input">
       <span className="username">
         {userName}@{envName}{' '}
-        <span className="session-name">
-          {scopeName ? `(${scopeName})` : ''}
-        </span>
+        {pathName && <span className="path-name">{pathName}</span>}
       </span>
 
       <div className="input-field">

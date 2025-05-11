@@ -1,19 +1,31 @@
-import { useRef, useState, createRef, useEffect, useContext } from 'react';
+import {
+  useRef,
+  useState,
+  createRef,
+  useEffect,
+  useContext,
+  useLayoutEffect,
+} from 'react';
 import generateUniqueId from '../helpers/generateUniqueId';
 import SessionContext from '../context/SessionContext';
 
 export const useTerminal = (handlers = {}) => {
-  const { updateUserName, updateEnvName, operations, updateOperations } =
-    useContext(SessionContext);
+  const contextController = useContext(SessionContext);
 
   const defaultHandlers = {
+    // TODO: This should set CleanSpace component height
     clear: {
       description: 'Clear terminal',
       handler() {
-        addOperation();
-
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => scrollToBottom());
+        addOperation({
+          userName: contextController.userName,
+          pathName: contextController.pathName,
+          envName: contextController.envName,
+          id: generateUniqueId(),
+          ref: createRef(null),
+          type: 'input',
+          text: '',
+          isExecuted: false,
         });
       },
     },
@@ -26,9 +38,8 @@ export const useTerminal = (handlers = {}) => {
               `
                 <div class>
                   <span class="text semibold">${key}</span>
-                  <span class="handler-description text lightgray">${
-                    command.description ?? ''
-                  }</span><br>
+                  <span class="handler-description text lightgray">${command.description ?? ''
+              }</span><br>
                 </div>
               `,
           )
@@ -45,7 +56,7 @@ export const useTerminal = (handlers = {}) => {
       description: 'List history',
       handler() {
         return {
-          text: operations
+          text: contextController.operations
             .filter((operation) => operation.type === 'input')
             .map((operation) => operation.text)
             .join('<br>'),
@@ -54,7 +65,7 @@ export const useTerminal = (handlers = {}) => {
     },
     set: {
       description: 'Allow yout to change environment variable names',
-      handler(args) {
+      async handler(args) {
         const names = ['username', 'envname'];
         const [nameToChange, newName] = args;
 
@@ -70,11 +81,6 @@ export const useTerminal = (handlers = {}) => {
 
         if (nameToChange.toLowerCase() === 'username') updateUserName(newName);
         if (nameToChange.toLowerCase() === 'envname') updateEnvName(newName);
-
-        return {
-          status: 'success',
-          text: `${nameToChange} updated!`,
-        };
       },
     },
   };
@@ -88,13 +94,16 @@ export const useTerminal = (handlers = {}) => {
 
   // Update clean space height
   const updateCleanSpaceHeight = () => {
-    const occupiedSpace = operations.reduce((height, operation) => {
-      if (operation.text === 'clear') return 0;
+    const occupiedSpace = contextController.operations.reduce(
+      (height, operation) => {
+        if (operation.text === 'clear') return 0;
 
-      const operationHeight = operation.ref.current.offsetHeight;
+        const operationHeight = operation.ref.current.offsetHeight;
 
-      return height + operationHeight;
-    }, 0);
+        return height + operationHeight;
+      },
+      0,
+    );
 
     setCleanSpaceHeight(`calc(100% - ${occupiedSpace}px)`);
   };
@@ -119,31 +128,30 @@ export const useTerminal = (handlers = {}) => {
     // New operation
     if (operation)
       newOperations.push({
+        userName: contextController.userName,
+        pathName: contextController.pathName,
+        envName: contextController.envName,
+        type,
         id: generateUniqueId(),
         ref: createRef(null),
         ...operation,
-        type,
       });
 
-    // New input operation
-    newOperations.push({
-      id: generateUniqueId(),
-      ref: createRef(null),
-      type: 'input',
-      text: '',
-    });
-
-    updateOperations([...operations, ...newOperations]);
+    contextController.updateOperations([
+      ...contextController.operations,
+      ...newOperations,
+    ]);
   };
 
   // Execute command
   const handleInputCommand = async (targetId, commandLine) => {
     setIsLoading(true);
     // Update text to target
-    operations.forEach((operation) => {
+    contextController.operations.forEach((operation) => {
       if (operation.id !== targetId) return;
 
       operation.text = commandLine;
+      operation.isExecuted = true;
     });
 
     // Parse command line
@@ -164,7 +172,7 @@ export const useTerminal = (handlers = {}) => {
     // Handle commands
     try {
       const cmd = allHandlers[command];
-      const resultOperation = await cmd.handler(args);
+      const resultOperation = await cmd.handler(args, contextController);
 
       addOperation(resultOperation);
     } catch (e) {
@@ -176,13 +184,35 @@ export const useTerminal = (handlers = {}) => {
   };
 
   // Init term
-  useEffect(() => {
+  useLayoutEffect(() => {
+    const lastOperation =
+      contextController.operations[contextController.operations.length - 1];
+
     updateCleanSpaceHeight();
     focusInput();
-  }, [operations]);
+    scrollToBottom();
+
+    if (
+      !lastOperation ||
+      lastOperation.type !== 'input' ||
+      lastOperation.isExecuted
+    )
+      addOperation({
+        userName: contextController.userName,
+        pathName: contextController.pathName,
+        envName: contextController.envName,
+        id: generateUniqueId(),
+        ref: createRef(null),
+        type: 'input',
+        text: '',
+        isExecuted: false,
+      });
+
+    console.log(contextController.currDatabase);
+  }, [contextController.operations]);
 
   return {
-    operations,
+    operations: contextController.operations,
     mainRef,
     lastInputRef,
     focusInput,

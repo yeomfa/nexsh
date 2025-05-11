@@ -10,15 +10,9 @@ const sessionInfo = JSON.parse(localStorage.getItem('session-info')) || {
 function SessionProvider({ children }) {
   const [userName, setUserName] = useState(sessionInfo.userName);
   const [envName, setEnvName] = useState(sessionInfo.envName);
-  const [scopeName, setScopeName] = useState('');
-  const [operations, setOperations] = useState([
-    {
-      id: generateUniqueId(),
-      ref: createRef(null),
-      type: 'input',
-      text: '',
-    },
-  ]);
+  const [currDatabase, setCurrDatabase] = useState({});
+  const [pathName, setPathName] = useState('/dbs');
+  const [operations, setOperations] = useState([]);
 
   // Store session
   const storeSession = () => {
@@ -36,9 +30,9 @@ function SessionProvider({ children }) {
     setUserName(newUserName);
   };
 
-  // Update session name
-  const updateScopeName = (newScopeName) => {
-    setScopeName(newScopeName);
+  // Update path name
+  const updatePathName = (newPathName) => {
+    setPathName(newPathName);
   };
 
   // Update enviroment name
@@ -51,21 +45,28 @@ function SessionProvider({ children }) {
     setOperations(newOperations);
   };
 
+  // Update currDatabase
+  const updateCurrDatabase = (newDatabase) => {
+    setCurrDatabase(newDatabase);
+  };
+
   useEffect(() => {
     storeSession();
-  }, [operations, userName, envName]);
+  }, [userName, envName]);
 
   return (
     <SessionContext.Provider
       value={{
         userName,
         updateUserName,
-        scopeName,
-        updateScopeName,
+        pathName,
+        updatePathName,
         envName,
         updateEnvName,
         operations,
         updateOperations,
+        currDatabase,
+        updateCurrDatabase,
       }}
     >
       {children}

@@ -6,3 +6,4 @@ export * from './greet';
 
 // HANDLE DB
 export * from './ls';
+export * from './use';

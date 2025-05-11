@@ -10,7 +10,7 @@ export const ls = {
       !['help', 'dbs', 'collections'].includes(args[0].trim())
     )
       return {
-        text: 'Invalid param, use `ls help` for see avaliable params',
+        text: 'Invalid param, use `ls help` for see available params',
         status: 'error',
       };
 

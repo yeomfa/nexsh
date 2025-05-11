@@ -13,10 +13,11 @@
   padding-left: 4px;
 }
 
-.input .session-name {
+.input .path-name {
   font-size: 14px;
   font-weight: 500;
   color: var(--lightgray-color);
+  padding-left: 5px;
 }
 
 .input-field {
