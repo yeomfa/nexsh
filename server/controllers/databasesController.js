@@ -3,7 +3,7 @@ import { readFileSync, writeFile } from 'node:fs';
 const { dirname } = import.meta;
 
 // Data
-const dbsArr = JSON.parse(
+let dbsArr = JSON.parse(
   readFileSync(`${dirname}/../resources/databases.json`, 'utf8'),
 );
 
@@ -56,26 +56,117 @@ const createDatabase = (req, res) => {
 
 // Get
 const getDatabase = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined',
+  // Get name
+  const { name } = req.params;
+
+  // Get database
+  const database = dbsArr.find((db) => db.name === name);
+
+  // Validate database
+  if (!database) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Invalid name',
+    });
+  }
+
+  // Send response
+  res.status(200).json({
+    status: 'success',
+    data: {
+      database,
+    },
   });
 };
 
 // Update
 const updateDatabase = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined',
+  // Get name
+  const { name } = req.params;
+
+  // Get database
+  const database = dbsArr.find((db) => db.name === name);
+
+  // Validate database
+  if (!database) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Invalid name',
+    });
+  }
+
+  // Build new object
+  const newData = req.body;
+  const newDatabase = {
+    ...database,
+    ...newData,
+  };
+
+  // New databases object
+  dbsArr = dbsArr.map((db) => {
+    if (db.name !== name) return db;
+
+    return newDatabase;
   });
+
+  // Save dbsArr
+  writeFile(
+    `${dirname}/../resources/databases.json`,
+    JSON.stringify(dbsArr),
+    (err) => {
+      if (err)
+        return res.status(500).json({
+          status: 'error',
+          message: err.message,
+        });
+
+      // Send response
+      res.status(200).json({
+        status: 'success',
+        data: {
+          database: newDatabase,
+        },
+      });
+    },
+  );
 };
 
 // Delete
 const deleteDatabase = (req, res) => {
-  res.status(500).json({
-    status: 'error',
-    message: 'This route is not yet defined',
-  });
+  // Get name
+  const { name } = req.params;
+
+  // Get database
+  const database = dbsArr.find((db) => db.name === name);
+
+  // Validate database
+  if (!database) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Invalid name',
+    });
+  }
+
+  // New databases object
+  dbsArr = dbsArr.filter((db) => db.name !== name);
+
+  // Save dbsArr
+  writeFile(
+    `${dirname}/../resources/databases.json`,
+    JSON.stringify(dbsArr),
+    (err) => {
+      if (err)
+        return res.status(500).json({
+          status: 'error',
+          message: err.message,
+        });
+
+      // Send response
+      res.status(204).json({
+        status: 'success',
+      });
+    },
+  );
 };
 
 export default {

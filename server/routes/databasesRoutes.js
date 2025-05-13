@@ -8,7 +8,7 @@ databasesRouter
   .get(controller.getAllDatabases)
   .post(controller.createDatabase);
 databasesRouter
-  .route('/:id')
+  .route('/:name')
   .get(controller.getDatabase)
   .patch(controller.updateDatabase)
   .delete(controller.deleteDatabase);
