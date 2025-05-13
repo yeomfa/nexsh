@@ -8,6 +8,9 @@ const app = express();
 // Middlewares
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev'));
 
+// Include body object in request
+app.use(express.json());
+
 // Mount
 app.use('/api/v1/databases', databasesRouter);
 

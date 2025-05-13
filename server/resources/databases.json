@@ -1,6 +1,4 @@
 [
-  {
-    "id": 1,
-    "name": "local"
-  }
+  { "id": 1, "name": "local" },
+  { "id": 2, "name": "test" }
 ]
