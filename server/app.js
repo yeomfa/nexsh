@@ -1,7 +1,7 @@
-import fs from 'node:fs';
 import express from 'express';
 import morgan from 'morgan';
 import { databasesRouter } from './routes/databasesRoutes.js';
+import { collectionsRouter } from './routes/collectionsRoutes.js';
 
 const app = express();
 
@@ -13,5 +13,6 @@ app.use(express.json());
 
 // Mount
 app.use('/api/v1/databases', databasesRouter);
+app.use('/api/v1/collections', collectionsRouter);
 
 export default app;
