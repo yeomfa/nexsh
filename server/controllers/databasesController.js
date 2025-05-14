@@ -1,4 +1,5 @@
-import { readFileSync, writeFile } from 'node:fs';
+import { readFileSync } from 'node:fs';
+import { writeFile } from 'node:fs/promises';
 
 const { dirname } = import.meta;
 
@@ -6,6 +7,18 @@ const { dirname } = import.meta;
 let dbsArr = JSON.parse(
   readFileSync(`${dirname}/../resources/databases.json`, 'utf8'),
 );
+
+// Write JSON
+const writeJSON = async (resource, object) => {
+  try {
+    await writeFile(
+      `${dirname}/../resources/${resource}.json`,
+      JSON.stringify(object),
+    );
+  } catch (err) {
+    throw new Error(err.message);
+  }
+};
 
 // Get all
 const getAllDatabases = (req, res) => {
@@ -19,7 +32,7 @@ const getAllDatabases = (req, res) => {
 };
 
 // Create
-const createDatabase = (req, res) => {
+const createDatabase = async (req, res) => {
   // Get id
   const id = dbsArr.length + 1;
 
@@ -32,26 +45,19 @@ const createDatabase = (req, res) => {
   // Push to dbsArr
   dbsArr.push(database);
 
-  // Save dbsArr in databases.json
-  writeFile(
-    `${dirname}/../resources/databases.json`,
-    JSON.stringify(dbsArr),
-    (err) => {
-      if (err)
-        return res.status(500).json({
-          status: 'error',
-          message: err.message,
-        });
-
-      // Send response
-      res.status(201).json({
-        status: 'success',
-        data: {
-          database,
-        },
-      });
-    },
-  );
+  // Save dbsArr
+  try {
+    await writeJSON('databases', dbsArr);
+    // Send response
+    res.status(201).json({
+      status: 'success',
+    });
+  } catch (err) {
+    return res.status(500).json({
+      status: 'error',
+      message: err.message,
+    });
+  }
 };
 
 // Get
@@ -80,7 +86,7 @@ const getDatabase = (req, res) => {
 };
 
 // Update
-const updateDatabase = (req, res) => {
+const updateDatabase = async (req, res) => {
   // Get name
   const { name } = req.params;
 
@@ -110,29 +116,22 @@ const updateDatabase = (req, res) => {
   });
 
   // Save dbsArr
-  writeFile(
-    `${dirname}/../resources/databases.json`,
-    JSON.stringify(dbsArr),
-    (err) => {
-      if (err)
-        return res.status(500).json({
-          status: 'error',
-          message: err.message,
-        });
-
-      // Send response
-      res.status(200).json({
-        status: 'success',
-        data: {
-          database: newDatabase,
-        },
-      });
-    },
-  );
+  try {
+    await writeJSON('databases', dbsArr);
+    // Send response
+    res.status(200).json({
+      status: 'success',
+    });
+  } catch (err) {
+    return res.status(500).json({
+      status: 'error',
+      message: err.message,
+    });
+  }
 };
 
 // Delete
-const deleteDatabase = (req, res) => {
+const deleteDatabase = async (req, res) => {
   // Get name
   const { name } = req.params;
 
@@ -151,22 +150,18 @@ const deleteDatabase = (req, res) => {
   dbsArr = dbsArr.filter((db) => db.name !== name);
 
   // Save dbsArr
-  writeFile(
-    `${dirname}/../resources/databases.json`,
-    JSON.stringify(dbsArr),
-    (err) => {
-      if (err)
-        return res.status(500).json({
-          status: 'error',
-          message: err.message,
-        });
-
-      // Send response
-      res.status(204).json({
-        status: 'success',
-      });
-    },
-  );
+  try {
+    await writeJSON('databases', dbsArr);
+    // Send response
+    res.status(204).json({
+      status: 'success',
+    });
+  } catch (err) {
+    return res.status(500).json({
+      status: 'error',
+      message: err.message,
+    });
+  }
 };
 
 export default {
