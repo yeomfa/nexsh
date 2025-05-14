@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs';
-import { writeFile } from 'node:fs/promises';
+import { writeJSON } from '../utils/writeJSON.js';
 
 const { dirname } = import.meta;
 
@@ -8,16 +8,33 @@ let dbsArr = JSON.parse(
   readFileSync(`${dirname}/../resources/databases.json`, 'utf8'),
 );
 
-// Write JSON
-const writeJSON = async (resource, object) => {
-  try {
-    await writeFile(
-      `${dirname}/../resources/${resource}.json`,
-      JSON.stringify(object),
-    );
-  } catch (err) {
-    throw new Error(err.message);
+// Middlewares
+
+// Validate ID
+const checkId = (req, res, next, val) => {
+  const database = dbsArr.find((db) => db.name === val);
+
+  // Validate database
+  if (!database) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Invalid name',
+    });
   }
+
+  next();
+};
+
+// Validate body
+const checkBody = (req, res, next) => {
+  if (!req.body || !req.body?.name) {
+    return res.status(400).json({
+      status: 'fail',
+      message: 'Property name is required',
+    });
+  }
+
+  next();
 };
 
 // Get all
@@ -68,14 +85,6 @@ const getDatabase = (req, res) => {
   // Get database
   const database = dbsArr.find((db) => db.name === name);
 
-  // Validate database
-  if (!database) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Invalid name',
-    });
-  }
-
   // Send response
   res.status(200).json({
     status: 'success',
@@ -92,14 +101,6 @@ const updateDatabase = async (req, res) => {
 
   // Get database
   const database = dbsArr.find((db) => db.name === name);
-
-  // Validate database
-  if (!database) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Invalid name',
-    });
-  }
 
   // Build new object
   const newData = req.body;
@@ -138,14 +139,6 @@ const deleteDatabase = async (req, res) => {
   // Get database
   const database = dbsArr.find((db) => db.name === name);
 
-  // Validate database
-  if (!database) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Invalid name',
-    });
-  }
-
   // New databases object
   dbsArr = dbsArr.filter((db) => db.name !== name);
 
@@ -170,4 +163,6 @@ export default {
   createDatabase,
   updateDatabase,
   deleteDatabase,
+  checkId,
+  checkBody,
 };
