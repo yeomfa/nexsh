@@ -109,7 +109,6 @@ const updateCollection = async (req, res) => {
 
     return newCollection;
   });
-  console.log(collectionsArr);
 
   // SavecollectionsArr
   try {
