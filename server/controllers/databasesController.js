@@ -122,6 +122,9 @@ const updateDatabase = async (req, res) => {
     // Send response
     res.status(200).json({
       status: 'success',
+      data: {
+        database: newDatabase,
+      },
     });
   } catch (err) {
     return res.status(500).json({
@@ -135,9 +138,6 @@ const updateDatabase = async (req, res) => {
 const deleteDatabase = async (req, res) => {
   // Get name
   const { name } = req.params;
-
-  // Get database
-  const database = dbsArr.find((db) => db.name === name);
 
   // New databases object
   dbsArr = dbsArr.filter((db) => db.name !== name);
