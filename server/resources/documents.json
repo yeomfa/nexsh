@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "dbId": 1,
+    "collection_id": 1,
+    "username": "yeomfa",
+    "password": "!4e5adlkjq"
+  },
+  {
+    "id": 2,
+    "dbId": 1,
+    "collectionId": 1,
+    "username": "test1",
+    "password": "admin123"
+  }
+]

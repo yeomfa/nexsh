@@ -24,7 +24,7 @@ const checkBody = (req, res, next) => {
   if (!req.body || !req.body.name || !req.body.dbId)
     return res.status(400).json({
       status: 'fail',
-      message: 'Property dbId and name are required',
+      message: 'Properties dbId and name are required',
     });
 
   next();
