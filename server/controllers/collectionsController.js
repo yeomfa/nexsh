@@ -133,7 +133,7 @@ const deleteCollection = async (req, res) => {
   // Get id
   const { id } = req.params;
 
-  // New databases object
+  // New collection object
   collectionsArr = collectionsArr.filter((col) => col.id !== +id);
 
   // Save collectionsArr
