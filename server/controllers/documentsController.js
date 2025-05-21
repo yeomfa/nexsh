@@ -26,10 +26,10 @@ const checkId = (req, res, next, val) => {
 
 // Check body
 const checkBody = (req, res, next) => {
-  if (!req.body || !req.body.dbId || !req.body.collectionId)
+  if (!req.body || !req.body.collectionId)
     return res.status(400).json({
       status: 'fail',
-      message: 'Properties dbId and collectionId are required',
+      message: 'Property collectionId is required',
     });
 
   next();

@@ -185,6 +185,43 @@ const getAllCollectionsByDatabase = async (req, res) => {
   });
 };
 
+// Get All Collections
+const getAllDocumentsByCollectionByDatabase = async (req, res) => {
+  const { db_name, col_name } = req.params;
+  console.log(db_name, col_name);
+
+  // Get database
+  const database = dbsArr.find((db) => db.name === db_name);
+
+  // Read collections JSON
+  const collectionsArr = JSON.parse(
+    await readFile(`${dirname}/../resources/collections.json`, 'utf8'),
+  );
+
+  // Get collections
+  const collection = collectionsArr.find(
+    (col) => col.dbId === database.id && col.name === col_name,
+  );
+
+  // Read documents JSON
+  const documentsArr = JSON.parse(
+    await readFile(`${dirname}/../resources/documents.json`, 'utf8'),
+  );
+
+  // Get documents
+  const documents = documentsArr.filter(
+    (doc) => doc.collection_id === collection.id,
+  );
+
+  res.status(200).json({
+    status: 'success',
+    results: documents.length,
+    data: {
+      documents,
+    },
+  });
+};
+
 export default {
   getAllDatabases,
   getDatabase,
@@ -194,4 +231,5 @@ export default {
   checkId,
   checkBody,
   getAllCollectionsByDatabase,
+  getAllDocumentsByCollectionByDatabase,
 };
