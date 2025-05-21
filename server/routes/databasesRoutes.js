@@ -10,8 +10,13 @@ databasesRouter
   .route('/')
   .get(controller.getAllDatabases)
   .post(controller.checkBody, controller.createDatabase);
+
 databasesRouter
   .route('/:name')
   .get(controller.getDatabase)
   .patch(controller.checkBody, controller.updateDatabase)
   .delete(controller.deleteDatabase);
+
+databasesRouter
+  .route('/:name/collections')
+  .get(controller.getAllCollectionsByDatabase);

@@ -1,4 +1,5 @@
 import { readFileSync } from 'node:fs';
+import { readFile } from 'node:fs/promises';
 import { writeJSON } from '../utils/writeJSON.js';
 
 const { dirname } = import.meta;
@@ -68,6 +69,9 @@ const createDatabase = async (req, res) => {
     // Send response
     res.status(201).json({
       status: 'success',
+      data: {
+        database,
+      },
     });
   } catch (err) {
     return res.status(500).json({
@@ -157,6 +161,30 @@ const deleteDatabase = async (req, res) => {
   }
 };
 
+// Get All Collections
+const getAllCollectionsByDatabase = async (req, res) => {
+  const { name } = req.params;
+
+  // Get database
+  const database = dbsArr.find((db) => db.name === name);
+
+  // Read collections JSON
+  const collectionsArr = JSON.parse(
+    await readFile(`${dirname}/../resources/collections.json`, 'utf8'),
+  );
+
+  // Get collections
+  const collections = collectionsArr.filter((col) => col.dbId === database.id);
+
+  res.status(200).json({
+    status: 'success',
+    results: collections.length,
+    data: {
+      collections,
+    },
+  });
+};
+
 export default {
   getAllDatabases,
   getDatabase,
@@ -165,4 +193,5 @@ export default {
   deleteDatabase,
   checkId,
   checkBody,
+  getAllCollectionsByDatabase,
 };
