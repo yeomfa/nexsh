@@ -2,20 +2,17 @@ import waiter from '../helpers/waiter';
 
 export const ls = {
   description: 'List databases and collections',
-  async handler(args) {
+  async handler(args, contextController) {
     // Guard clauss
-    console.log(args);
     if (
       args.length === 0 ||
-      !['help', 'dbs', 'collections'].includes(args[0].trim())
+      !['help', 'dbs', 'collections', 'col'].includes(args[0].trim())
     )
       return {
         text: 'Invalid param, use `ls help` for see available params',
         status: 'error',
       };
 
-    let text = '';
-    let status = '';
     const param = args[0].trim();
 
     // Show help
@@ -41,8 +38,8 @@ export const ls = {
     }
 
     // List collections
-    if (param === 'collections') {
-      const currDatabase = {};
+    if (param === 'collections' || param === 'col') {
+      const { currDatabase } = contextController;
 
       if (!currDatabase.id)
         return {
@@ -50,20 +47,19 @@ export const ls = {
           status: 'error',
         };
 
-      // const { data } = await waiter.get('/api/v1/databases/:id/collections');
+      console.log(currDatabase);
+      const { data } = await waiter.get(
+        `/api/v1/databases/${currDatabase.name}/collections`,
+      );
       const collections = data.collections;
-      const collectionsOutput = collections
-        .map((collection) => collection.name)
-        .join('<br>');
-
+      const collectionsOutput =
+        collections.length > 0
+          ? collections.map((collection) => collection.name).join('<br>')
+          : 'empty';
       return {
         text: collectionsOutput,
-        status: 'success',
+        status: collections.length > 0 ? 'success' : '',
       };
-    }
-
-    // List collections
-    if (param === 'collections') {
     }
   },
 };

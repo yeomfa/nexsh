@@ -22,5 +22,9 @@ databasesRouter
   .get(controller.getAllCollectionsByDatabase);
 
 databasesRouter
+  .route('/:db_name/collections/:col_name')
+  .get(controller.getCollectionByDatabase);
+
+databasesRouter
   .route('/:db_name/collections/:col_name/documents')
   .get(controller.getAllDocumentsByCollectionByDatabase);

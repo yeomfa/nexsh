@@ -207,8 +207,6 @@ export const useTerminal = (handlers = {}) => {
         text: '',
         isExecuted: false,
       });
-
-    console.log(contextController.currDatabase);
   }, [contextController.operations]);
 
   return {

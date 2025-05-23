@@ -26,7 +26,7 @@ export const use = {
 
     // Get all databes
     const { data: databasesData } = await waiter.get(`/api/v1/databases`);
-    const databases = databasesData.databases;
+    const { databases } = databasesData;
 
     // Validate databse
     let database = databases.find((db) => db.name === dbName);
@@ -51,6 +51,9 @@ export const use = {
 
     // Update context
     contextController.updateCurrDatabase(database);
+
+    // Update pathName
+    contextController.updatePathName(`/dbs/${database.name}`);
 
     return {
       text: `Switched to <span class= "semibold"> ${database.name}</span > database`,

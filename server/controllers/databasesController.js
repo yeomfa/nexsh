@@ -5,6 +5,7 @@ import { writeJSON } from '../utils/writeJSON.js';
 const { dirname } = import.meta;
 
 // Data
+// TODO: Read inside of the request
 let dbsArr = JSON.parse(
   readFileSync(`${dirname}/../resources/databases.json`, 'utf8'),
 );
@@ -222,6 +223,40 @@ const getAllDocumentsByCollectionByDatabase = async (req, res) => {
   });
 };
 
+// Get collection by database
+const getCollectionByDatabase = async (req, res) => {
+  // TODO: Create middleware for validate db_name and col_name
+  const { db_name, col_name } = req.params;
+
+  // Get database
+  const database = dbsArr.find((db) => db.name === db_name);
+
+  // Read collections JSON
+  const collectionsArr = JSON.parse(
+    await readFile(`${dirname}/../resources/collections.json`, 'utf8'),
+  );
+
+  // Get collection
+  const collection = collectionsArr.find(
+    (col) => col.dbId === database.id && col.name === col_name,
+  );
+
+  if (!collection) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Invalid collection name',
+    });
+  }
+
+  // Get database
+  res.status(200).json({
+    status: 'success',
+    data: {
+      collection,
+    },
+  });
+};
+
 export default {
   getAllDatabases,
   getDatabase,
@@ -231,5 +266,6 @@ export default {
   checkId,
   checkBody,
   getAllCollectionsByDatabase,
+  getCollectionByDatabase,
   getAllDocumentsByCollectionByDatabase,
 };
