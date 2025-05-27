@@ -8,3 +8,4 @@ export * from './create';
 // HANDLE DB
 export * from './ls';
 export * from './use';
+export * from './insert';

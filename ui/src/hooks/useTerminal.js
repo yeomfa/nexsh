@@ -79,8 +79,10 @@ export const useTerminal = (handlers = {}) => {
             text: `Invalid param, try: set [userName, envName] newNameValue`,
           };
 
-        if (nameToChange.toLowerCase() === 'username') updateUserName(newName);
-        if (nameToChange.toLowerCase() === 'envname') updateEnvName(newName);
+        if (nameToChange.toLowerCase() === 'username')
+          contextController.updateUserName(newName);
+        if (nameToChange.toLowerCase() === 'envname')
+          contextController.updateEnvName(newName);
       },
     },
   };
@@ -176,7 +178,10 @@ export const useTerminal = (handlers = {}) => {
 
       addOperation(resultOperation);
     } catch (e) {
-      addOperation({ text: `Execution failed: ${e.message}`, status: 'error' });
+      addOperation({
+        text: `[Nexsh catcher] Execution failed: ${e.message}`,
+        status: 'error',
+      });
       throw new Error(e.message);
     } finally {
       setIsLoading(false);
