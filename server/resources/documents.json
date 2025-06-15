@@ -6,13 +6,5 @@
     "password": "nana123",
     "dbId": 1,
     "collectionId": 1
-  },
-  {
-    "id": 4,
-    "firstName": "Omar",
-    "lastName": "Fandiño",
-    "username": "yeomfa",
-    "dbId": 3,
-    "collectionId": 6
   }
 ]
