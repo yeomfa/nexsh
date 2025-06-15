@@ -47,7 +47,6 @@ export const ls = {
           status: 'error',
         };
 
-      console.log(currDatabase);
       const { data } = await waiter.get(
         `/api/v1/databases/${currDatabase.name}/collections`,
       );

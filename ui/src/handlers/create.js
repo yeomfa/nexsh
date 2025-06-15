@@ -95,8 +95,6 @@ export const create = {
         dbId: currDatabase.id,
       });
 
-      console.log(resData);
-
       if (resData.status === 'success') {
         return {
           text: `${resourceName} created`,

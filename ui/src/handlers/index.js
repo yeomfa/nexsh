@@ -1,4 +1,14 @@
-import { alert, async, greet, log, ls, use, create, insert } from './mount';
+import {
+  alert,
+  async,
+  greet,
+  log,
+  ls,
+  use,
+  create,
+  insert,
+  find,
+} from './mount';
 
 export default {
   greet,
@@ -9,4 +19,5 @@ export default {
   use,
   create,
   insert,
+  find,
 };

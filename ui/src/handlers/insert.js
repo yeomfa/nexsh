@@ -65,8 +65,6 @@ export const insert = {
         };
       }
 
-      console.log(documentData.data.document);
-
       return {
         text: 'Document inserted',
         status: 'success',
