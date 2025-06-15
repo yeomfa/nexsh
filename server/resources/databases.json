@@ -1,1 +1,6 @@
-[{"id":1,"name":"local"},{"id":2,"name":"configs"},{"id":3,"name":"test"},{"id":4,"name":"metadata"}]
+[
+  { "id": 1, "name": "local" },
+  { "id": 2, "name": "configs" },
+  { "id": 3, "name": "test" },
+  { "id": 4, "name": "metadata" }
+]

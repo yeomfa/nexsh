@@ -1,1 +1,18 @@
-[{"id":1,"collection_id":1,"username":"yeomfa","password":"!4e5adlkjq"},{"id":2,"collectionId":1,"username":"test1","password":"admin123"},{"id":3,"username":"yaz","password":"nana123","dbId":1,"collectionId":1}]
+[
+  { "id": 2, "collectionId": 1, "username": "test1", "password": "admin123" },
+  {
+    "id": 3,
+    "username": "yaz",
+    "password": "nana123",
+    "dbId": 1,
+    "collectionId": 1
+  },
+  {
+    "id": 4,
+    "firstName": "Omar",
+    "lastName": "Fandiño",
+    "username": "yeomfa",
+    "dbId": 3,
+    "collectionId": 6
+  }
+]

@@ -1,1 +1,8 @@
-[{"id":1,"dbId":1,"name":"users"},{"id":2,"dbId":1,"name":"modules"},{"id":3,"dbId":2,"name":"users"},{"id":7,"dbId":2,"name":"metadata"},{"id":5,"dbId":1,"name":"test"}]
+[
+  { "id": 1, "dbId": 1, "name": "users" },
+  { "id": 2, "dbId": 1, "name": "modules" },
+  { "id": 3, "dbId": 2, "name": "users" },
+  { "id": 7, "dbId": 2, "name": "metadata" },
+  { "id": 5, "dbId": 1, "name": "test" },
+  { "id": 6, "dbId": 3, "name": "users" }
+]

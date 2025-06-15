@@ -189,7 +189,6 @@ const getAllCollectionsByDatabase = async (req, res) => {
 // Get All Collections
 const getAllDocumentsByCollectionByDatabase = async (req, res) => {
   const { db_name, col_name } = req.params;
-  console.log(db_name, col_name);
 
   // Get database
   const database = dbsArr.find((db) => db.name === db_name);
@@ -211,7 +210,7 @@ const getAllDocumentsByCollectionByDatabase = async (req, res) => {
 
   // Get documents
   const documents = documentsArr.filter(
-    (doc) => doc.collection_id === collection.id,
+    (doc) => doc.collectionId === collection.id,
   );
 
   res.status(200).json({
